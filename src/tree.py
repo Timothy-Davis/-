@@ -28,11 +28,23 @@ parse_tree ={
 
                         'y': {
                                 'a': [True, 'きゃ', 'キャ'],
-                                'o': [True, 'きょ', 'キョ'],
                                 'u': [True, 'きゅ', 'キュ'],
+                                'o': [True, 'きょ', 'キョ'],
                             }
-                    },
-                'n': None,
+                     },
+                'n': {
+                        'a': [True, 'な', 'ナ'],
+                        'i': [True, 'に', 'ニ'],
+                        'u': [True, 'ぬ', 'ヌ'],
+                        'e': [True, 'ね', 'ネ'],
+                        'o': [True, 'の', 'ノ'],
+
+                        'y': {
+                                'a': [True, 'にゃ', 'ニャ'],
+                                'u': [True, 'にゅ', 'ニュ'],
+                                'o': [True, 'にょ', 'ニョ'],
+                             }
+                     },
                 's': None,
                 'z': None,
                 'j': None,
@@ -49,7 +61,7 @@ parse_tree ={
                 'g': None,
         }
 
-TSU_CONSONANTS = ['k', , 's', 'z', 'j', 't', 'd', 'c', 'h', 'b', 'f', 'm', 'y', 'r', 'w', 'g']
+TSU_CONSONANTS = ['k', 's', 'z', 'j', 't', 'd', 'c', 'h', 'b', 'f', 'm', 'y', 'r', 'w', 'g']
 
 HIRAGANA = False
 KATAKANA = True
@@ -59,6 +71,8 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
     index = 0
     while index != len(romaji):
         temp = parse_tree
+
+        # Special case conditions for adding a small つ on double consonants
         if (index <= len(romaji)-2 and romaji[index] == romaji[index+1] and romaji[index] in TSU_CONSONANTS):
             if kana is KATAKANA:
                 output_str += 'ッ'
@@ -66,6 +80,17 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
                 output_str += 'っ'
             index += 1
             continue
+
+        # Unfortunately, special logic is also needed to handle singular ん and double-consonant n-types.
+        if romaji[index] == 'n':
+            if index+1 == len(romaji) or romaji[index+1] == 'n':
+                if kana is KATAKANA:
+                    output_str += 'ン'
+                else:
+                    output_str += 'ん'
+                index += 1
+                continue
+
         while type(temp) != list:
             temp = temp[romaji[index]]
             index += 1
