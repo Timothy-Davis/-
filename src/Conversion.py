@@ -3,7 +3,7 @@ def romaji_to_hiragana(s):
         return s
 
     for char in s:
-        # vowels fist
+        # vowels fist, and the special boy ん
         if s[0] == 'a':
             return 'あ' + romaji_to_hiragana(s[1:])
         elif s[0] == 'i':
@@ -14,6 +14,8 @@ def romaji_to_hiragana(s):
             return 'え' + romaji_to_hiragana(s[1:])
         elif s[0] == 'o':
             return 'お' + romaji_to_hiragana(s[1:])
+        elif s[0] == 'n':
+            return 'ん' + romaji_to_hiragana(s[1:])
 
         # Now characters with small ya, yu, or yo
         elif s[0] == 'k' and s[1] == 'y' and s[2] == 'a':
@@ -200,8 +202,8 @@ def romaji_to_hiragana(s):
 
         elif s[0] == 'z' and s[1] == 'a':
             return 'ざ' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'j' and s[1] == 'h' and s[2] == 'i':
-            return 'じ' + romaji_to_hiragana(s[3:])
+        elif s[0] == 'j' and s[1] == 'i':
+            return 'じ' + romaji_to_hiragana(s[2:])
         elif s[0] == 'z' and s[1] == 'u':
             return 'ず' + romaji_to_hiragana(s[2:])
         elif s[0] == 'z' and s[1] == 'e':
