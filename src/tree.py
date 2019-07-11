@@ -39,7 +39,6 @@ parse_tree ={
                 't': None,
                 'd': None,
                 'c': None,
-                'n': None,
                 'h': None,
                 'b': None,
                 'f': None,
@@ -50,6 +49,8 @@ parse_tree ={
                 'g': None,
         }
 
+CONSONANTS = ['k', 'n', 's', 'z', 'j', 't', 'd', 'c', 'h', 'b', 'f', 'm', 'y', 'r', 'w', 'g']
+
 HIRAGANA = False
 KATAKANA = True
 
@@ -58,6 +59,15 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
     index = 0
     while index != len(romaji):
         temp = parse_tree
+        if (index <= len(romaji)-2 and 
+           romaji[index] == romaji[index+1] and 
+           romaji[index] in CONSONANTS):
+            if kana is KATAKANA:
+                output_str += 'ッ'
+            else:
+                output_str += 'っ'
+            index += 1
+            continue
         while type(temp) != list:
             temp = temp[romaji[index]]
             index += 1
