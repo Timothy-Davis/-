@@ -6,6 +6,10 @@
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
+[Vv]env
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+
+# Ignore IDEA Stuff
+.idea
