@@ -247,4 +247,9 @@ def romaji_to_hiragana(s):
             return 'っ' + romaji_to_hiragana(s[1:])
 
 
-print(romaji_to_hiragana('kyohachottoatsuine'))
+if __name__ == '__main__':
+    import os
+    romaji = input('Enter some romaji [q to quit]: ').lower()
+    while romaji is not 'q':
+        print(romaji_to_hiragana(romaji))
+        romaji = input('Enter some romaji [q to quit]: ').lower()
