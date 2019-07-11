@@ -71,6 +71,13 @@ def romaji_to_hiragana(s):
         elif s[0] == 'j' and s[1] == 'o':
             return 'じょ' + romaji_to_hiragana(s[2:])
 
+        elif s[0] == 'z' and s[1] == 'a':
+            return 'じゃ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'z' and s[1] == 'u':
+            return 'じゅ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'z' and s[1] == 'o':
+            return 'じょ' + romaji_to_hiragana(s[2:])
+
         elif s[0] == 'c' and s[1] == 'h' and s[2] == 'a':
             return 'ちゃ' + romaji_to_hiragana(s[3:])
         elif s[0] == 'c' and s[1] == 'h' and s[2] == 'u':
@@ -153,6 +160,8 @@ def romaji_to_hiragana(s):
             return 'ひ' + romaji_to_hiragana(s[2:])
         elif s[0] == 'h' and s[1] == 'u':
             return 'ふ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'f' and s[1] == 'u':
+            return 'ふ' + romaji_to_hiragana(s[2:])
         elif s[0] == 'h' and s[1] == 'e':
             return 'へ' + romaji_to_hiragana(s[2:])
         elif s[0] == 'h' and s[1] == 'o':
@@ -192,9 +201,6 @@ def romaji_to_hiragana(s):
         elif s[0] == 'w' and s[1] == 'o':
             return 'を' + romaji_to_hiragana(s[2:])
 
-        elif s[0] == 'n':
-            return 'ん' + romaji_to_hiragana(s[1:])
-
         # Almost done, now we have dialectical marks i.e. dakuten and handakuten.
         elif s[0] == 'g' and s[1] == 'a':
             return 'が' + romaji_to_hiragana(s[2:])
@@ -210,6 +216,8 @@ def romaji_to_hiragana(s):
         elif s[0] == 'z' and s[1] == 'a':
             return 'ざ' + romaji_to_hiragana(s[2:])
         elif s[0] == 'j' and s[1] == 'i':
+            return 'じ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'z' and s[1] == 'i':
             return 'じ' + romaji_to_hiragana(s[2:])
         elif s[0] == 'z' and s[1] == 'u':
             return 'ず' + romaji_to_hiragana(s[2:])
