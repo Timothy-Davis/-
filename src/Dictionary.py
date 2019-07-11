@@ -1,4 +1,5 @@
 import Database
+import random
 
 
 class Word:
@@ -23,6 +24,13 @@ class Dictionary:
     def init(self):
         self.wordlist = Database.load_all()
 
+    def get_random_word(self):
+        amount_of_words = len(self.wordlist)
+        random_index = random.randint(0, amount_of_words-1)
+
+        return self.wordlist[random_index]
+
 
 # Globally accessible dictionary that most of the mini games will actually use
 global_dictionary = Dictionary()
+global_dictionary.get_random_word()
