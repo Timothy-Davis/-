@@ -14,8 +14,33 @@ def romaji_to_hiragana(s):
             return 'え' + romaji_to_hiragana(s[1:])
         elif s[0] == 'o':
             return 'お' + romaji_to_hiragana(s[1:])
-        elif s[0] == 'n':
+        elif s[0] == 'n' and len(s) == 1:
             return 'ん' + romaji_to_hiragana(s[1:])
+
+        # Since it would otherwise break the elif chain, this elif must be responsible for returning the
+        # character resulting from 'n' being its first letter.
+        elif s[0] == 'n' and len(s) > 1:
+            if s[1] != 'a' and s[1] != 'i' and s[1] != 'u' and s[1] != 'e' and s[1] != 'o' and s[1] != 'y':
+                return 'ん' + romaji_to_hiragana(s[1:])
+            elif s[0] == 'n' and s[1] == 'a':
+                return 'な' + romaji_to_hiragana(s[2:])
+            elif s[0] == 'n' and s[1] == 'i':
+                return 'に' + romaji_to_hiragana(s[2:])
+            elif s[0] == 'n' and s[1] == 'u':
+                return 'ぬ' + romaji_to_hiragana(s[2:])
+            elif s[0] == 'n' and s[1] == 'e':
+                return 'ね' + romaji_to_hiragana(s[2:])
+            elif s[0] == 'n' and s[1] == 'o':
+                return 'の' + romaji_to_hiragana(s[2:])
+            elif s[0] == 'n' and len(s) == 1:
+                return 'ん' + romaji_to_hiragana(s[1:])
+
+            elif s[0] == 'n' and s[1] == 'y' and s[2] == 'a':
+                return 'にゃ' + romaji_to_hiragana(s[3:])
+            elif s[0] == 'n' and s[1] == 'y' and s[2] == 'u':
+                return 'にゅ' + romaji_to_hiragana(s[3:])
+            elif s[0] == 'n' and s[1] == 'y' and s[2] == 'o':
+                return 'にょ' + romaji_to_hiragana(s[3:])
 
         # Now characters with small ya, yu, or yo
         elif s[0] == 'k' and s[1] == 'y' and s[2] == 'a':
@@ -59,13 +84,6 @@ def romaji_to_hiragana(s):
             return 'みゅ' + romaji_to_hiragana(s[3:])
         elif s[0] == 'm' and s[1] == 'y' and s[2] == 'o':
             return 'みょ' + romaji_to_hiragana(s[3:])
-
-        elif s[0] == 'n' and s[1] == 'y' and s[2] == 'a':
-            return 'にゃ' + romaji_to_hiragana(s[3:])
-        elif s[0] == 'n' and s[1] == 'y' and s[2] == 'u':
-            return 'にゅ' + romaji_to_hiragana(s[3:])
-        elif s[0] == 'n' and s[1] == 'y' and s[2] == 'o':
-            return 'にょ' + romaji_to_hiragana(s[3:])
 
         elif s[0] == 'h' and s[1] == 'y' and s[2] == 'a':
             return 'ひゃ' + romaji_to_hiragana(s[3:])
@@ -139,17 +157,6 @@ def romaji_to_hiragana(s):
             return 'ね' + romaji_to_hiragana(s[2:])
         elif s[0] == 'n' and s[1] == 'o':
             return 'の' + romaji_to_hiragana(s[2:])
-
-        elif s[0] == 'h' and s[1] == 'a':
-            return 'は' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'h' and s[1] == 'i':
-            return 'ひ' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'h' and s[1] == 'u':
-            return 'ふ' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'h' and s[1] == 'e':
-            return 'へ' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'h' and s[1] == 'o':
-            return 'ほ' + romaji_to_hiragana(s[2:])
 
         elif s[0] == 'm' and s[1] == 'a':
             return 'ま' + romaji_to_hiragana(s[2:])
