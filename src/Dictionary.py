@@ -20,17 +20,17 @@ class Dictionary:
     def __init__(self):
         self.wordlist = []
 
-    @staticmethod
     def init(self):
         self.wordlist = Database.load_all()
 
-    def get_random_word(self):
-        amount_of_words = len(self.wordlist)
-        random_index = random.randint(0, amount_of_words-1)
-
-        return self.wordlist[random_index]
+    def random_word(self):
+        return random.choice(self.wordlist)
 
 
 # Globally accessible dictionary that most of the mini games will actually use
 global_dictionary = Dictionary()
-global_dictionary.get_random_word()
+
+if __name__ == '__main__':
+    global_dictionary.init()
+    word = global_dictionary.random_word()
+    print("Random Word:", word.english, word.kanji, word.hiragana, word.katakana, word.romaji, word.note)
