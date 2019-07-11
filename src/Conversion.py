@@ -147,16 +147,16 @@ def romaji_to_hiragana(s):
         elif s[0] == 't' and s[1] == 'o':
             return 'と' + romaji_to_hiragana(s[2:])
 
-        elif s[0] == 'n' and s[1] == 'a':
-            return 'な' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'n' and s[1] == 'i':
-            return 'に' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'n' and s[1] == 'u':
-            return 'ぬ' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'n' and s[1] == 'e':
-            return 'ね' + romaji_to_hiragana(s[2:])
-        elif s[0] == 'n' and s[1] == 'o':
-            return 'の' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'h' and s[1] == 'a':
+            return 'は' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'h' and s[1] == 'i':
+            return 'ひ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'h' and s[1] == 'u':
+            return 'ふ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'h' and s[1] == 'e':
+            return 'へ' + romaji_to_hiragana(s[2:])
+        elif s[0] == 'h' and s[1] == 'o':
+            return 'ほ' + romaji_to_hiragana(s[2:])
 
         elif s[0] == 'm' and s[1] == 'a':
             return 'ま' + romaji_to_hiragana(s[2:])
