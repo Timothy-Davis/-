@@ -1,5 +1,4 @@
 def romaji_to_hiragana(s):
-    x = [ord(c) for c in s]
     if s == '':
         return s
 
