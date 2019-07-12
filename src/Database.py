@@ -13,7 +13,7 @@ def load_all() -> list:
         Dictionary.Word(['thick'], 0, 'atsui', 'あつい', 'アツい', '厚い', note='Thick'),
         Dictionary.Word(['deep', 'strong'], 0, 'atsui', 'あつい', 'アツい', '篤い', note='Deep or Strong'),
         Dictionary.Word(['this one'], 2, 'kore', 'これ', 'コレ', None),
-        Dictionary.Word(['my older sister'], 7, 'ane', 'あ', 'アネ', '姉'),
+        Dictionary.Word(['my older sister'], 7, 'ane', 'あね', 'アネ', '姉'),
         Dictionary.Word(['job', 'work', 'occupation'], 8, 'shigoto', 'しごと', 'シゴト', '仕事'),
         Dictionary.Word(['winter'], 8, 'fuyu', 'ふゆ', 'フユ', '冬'),
         Dictionary.Word(['to take medicine'], 9, 'kusuriwonomu', 'くすりをのむ', 'クスリヲノム', '薬を飲む'),
