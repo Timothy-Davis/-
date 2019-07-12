@@ -45,26 +45,153 @@ parse_tree ={
                                 'o': [True, 'にょ', 'ニョ'],
                              }
                      },
-                's': None,
-                'z': None,
-                'j': None,
-                't': None,
-                'd': None,
-                'c': None,
-                'h': None,
-                'b': None,
-                'f': None,
-                'm': None,
-                'y': None,
-                'r': None,
-                'w': None,
-                'g': None,
+                's': {
+                        'a': [True, 'さ', 'サ'],
+                        'u': [True, 'す', 'ス'],
+                        'e': [True, 'せ', 'セ'],
+                        'o': [True, 'そ', 'ソ'],
+
+                        'h': {
+                                'a': [True, 'しゃ', 'シャ'],
+                                'i': [True, 'し', 'シ'],
+                                'u': [True, 'しゅ', 'シュ'],
+                                'o': [True, 'しょ', 'ショ'],
+                             }
+                    },
+                'z': {
+                        'a': [True, 'ざ', 'ザ'],
+                        'i': [True, 'じ', 'ジ'],
+                        'u': [True, 'ず', 'ズ'],
+                        'e': [True, 'ぜ', 'ゼ'],
+                        'o': [True, 'ぞ', 'ゾ'],
+                    },
+                'j': {
+                        'a': [True, 'じゃ', 'ジャ'],
+                        'i': [True, 'じ', 'ジ'],
+                        'u': [True, 'じゅ', 'ジュ'],
+                        'o': [True, 'じょ', 'ジョ'],
+                    },
+                't': {
+                        'a': [True, 'た', 'タ'],
+                        'e': [True, 'て', 'テ'],
+                        'o': [True, 'と', 'ト'],
+
+                        's': {
+                                'u': [True, 'つ', 'ツ'],
+                             }
+                    },
+                'd': {
+                        'a': [True, 'だ', 'ダ'],
+                        'i': [True, 'ぢ', 'ヂ'],
+                        'u': [True, 'づ', 'ヅ'],
+                        'e': [True, 'で', 'デ'],
+                        'o': [True, 'ど', 'ド'],
+                    },
+                'c': {
+                        'h': {
+                                'a': [True, 'ちゃ', 'チャ'],
+                                'i': [True, 'ち', 'チ'],
+                                'u': [True, 'ちゅ', 'チュ'],
+                                'o': [True, 'ちょ', 'チョ'],
+                             }
+                    },
+                'h': {
+                        'a': [True, 'は', 'ハ'],
+                        'i': [True, 'ひ', 'ヒ'],
+                        'u': [True, 'ふ', 'フ'],
+                        'e': [True, 'へ', 'ヘ'],
+                        'o': [True, 'ほ', 'ホ'],
+
+                        'y': {
+                                'a': [True, 'ひゃ', 'ヒャ'],
+                                'u': [True, 'ひゅ', 'ヒュ'],
+                                'o': [True, 'ひょ', 'ヒョ'],
+                             }
+                    },
+                'b': {
+                        'a': [True, 'ば', 'バ'],
+                        'i': [True, 'び', 'ビ'],
+                        'u': [True, 'ぶ', 'ブ'],
+                        'e': [True, 'べ', 'ベ'],
+                        'o': [True, 'ぼ', 'ボ'],
+
+                        'y': {
+                                'a': [True, 'びゃ', 'ビャ'],
+                                'u': [True, 'びゅ', 'ビュ'],
+                                'o': [True, 'びょ', 'ビョ'],
+                             }
+                    },
+                'p': {
+                        'a': [True, 'ぱ', 'パ'],
+                        'i': [True, 'ぴ', 'ピ'],
+                        'u': [True, 'ぷ', 'プ'],
+                        'e': [True, 'ぺ', 'ペ'],
+                        'o': [True, 'ぽ', 'ポ'],
+
+                        'y': {
+                                'a': [True, 'ぴゃ', 'ピャ'],
+                                'u': [True, 'ぴゅ', 'ピュ'],
+                                'o': [True, 'ぴょ', 'ピョ'],
+                             }
+                    },
+                'f': {
+                        'u': [True, 'ふ', 'フ'],
+                    },
+                'm': {
+                        'a': [True, 'ま', 'マ'],
+                        'i': [True, 'み', 'ミ'],
+                        'u': [True, 'む', 'ム'],
+                        'e': [True, 'め', 'メ'],
+                        'o': [True, 'も', 'モ'],
+
+                        'y': {
+                                'a': [True, 'みゃ', 'ミャ'],
+                                'u': [True, 'みゅ', 'ミュ'],
+                                'o': [True, 'みょ', 'ミョ'],
+                             }
+                    },
+                'y': {
+                        'a': [True, 'や', 'ヤ'],
+                        'u': [True, 'ゆ', 'ユ'],
+                        'o': [True, 'よ', 'ヨ'],
+                    },
+                'r': {
+                        'a': [True, 'ら', 'ラ'],
+                        'i': [True, 'り', 'リ'],
+                        'u': [True, 'る', 'ル'],
+                        'e': [True, 'れ', 'レ'],
+                        'o': [True, 'ろ', 'ロ'],
+
+                        'y': {
+                                'a': [True, 'りゃ', 'リャ'],
+                                'u': [True, 'りゅ', 'リュ'],
+                                'o': [True, 'りょ', 'リョ'],
+                             }
+                    },
+                'w': {
+                        'a': [True, 'わ', 'ワ'],
+                        'o': [True, 'を', 'ヲ'],
+                    },
+                'g': {
+                        'a': [True, 'が', 'ガ'],
+                        'i': [True, 'ぎ', 'ギ'],
+                        'u': [True, 'ぐ', 'グ'],
+                        'e': [True, 'げ', 'ゲ'],
+                        'o': [True, 'ご', 'ゴ'],
+
+                        'y': {
+                                'a': [True, 'ぎゃ', 'ギャ'],
+                                'u': [True, 'ぎゅ', 'ギュ'],
+                                'o': [True, 'ぎょ', 'ギョ'],
+                             }
+                    },
         }
 
 TSU_CONSONANTS = ['k', 's', 'z', 'j', 't', 'd', 'c', 'h', 'b', 'f', 'm', 'y', 'r', 'w', 'g']
 
 HIRAGANA = False
 KATAKANA = True
+
 
 def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
     output_str = ''
@@ -73,7 +200,7 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
         temp = parse_tree
 
         # Special case conditions for adding a small つ on double consonants
-        if (index <= len(romaji)-2 and romaji[index] == romaji[index+1] and romaji[index] in TSU_CONSONANTS):
+        if index <= len(romaji)-2 and romaji[index] == romaji[index+1] and romaji[index] in TSU_CONSONANTS:
             if kana is KATAKANA:
                 output_str += 'ッ'
             else:
@@ -96,13 +223,14 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
             index += 1
 
         if kana is KATAKANA:
-            output_str+=temp[KATAKANA_INDEX]
+            output_str += temp[KATAKANA_INDEX]
         else:
             if temp[HAS_HIRAGANA]:
-                output_str+=temp[HIRAGANA_INDEX]
+                output_str += temp[HIRAGANA_INDEX]
             else:
                 raise ValueError("Invalid romaji to hiragana conversion. Romaji: " + romaji)
     return output_str
+
 
 if __name__ == '__main__':
     romaji = input('Please input some romaji [q to quit]: ').lower()
