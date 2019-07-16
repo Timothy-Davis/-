@@ -158,8 +158,6 @@ class __DatabaseInterfaceV010:
         else:
             raise exceptions.DatabaseError("Can't setup version table without a connection!")
 
-    # FIXME: Insertion currently is fragile and relies on the Word's english item being a string pre-formatted with
-    #        underscores, rather than doing that formatting itself as it should. This needs to be fixed soon.
     def insert_word(self, word: Word, user_defined=False):
         """
         Inserts a new word into the Database. Note: If attempting to insert multiple words, use batch_insert() instead.
@@ -169,7 +167,8 @@ class __DatabaseInterfaceV010:
         if self.db_conn is not None:
             try:
                 cursor = self.db_conn.cursor()
-                word_tuple = (word.english, word.romaji, word.kanji, word.chapter, word.note, 1 if user_defined else 0)
+                eng = word.english.join('_')
+                word_tuple = (eng, word.romaji, word.kanji, word.chapter, word.note, 1 if user_defined else 0)
                 cursor.execute(self.__INSERT_STATEMENT, word_tuple)
                 cursor.close()
             except sqlite3.Error as e:
@@ -177,13 +176,12 @@ class __DatabaseInterfaceV010:
         else:
             raise exceptions.DatabaseError('Unable to insert word without a connection!')
 
-    # FIXME: Insertion currently is fragile and relies on the Word's english item being a string pre-formatted with
-    #        underscores, rather than doing that formatting itself as it should. This needs to be fixed soon.
     def batch_insert(self, words: list, user_defined=False):
         try:
             cursor = self.db_conn.cursor()
             for word in words:
-                word_tuple = (word[0], word[1], word[2], word[3], word[4], 1 if user_defined else 0)
+                eng = word.english.join('_')
+                word_tuple = (eng, word.romaji, word.kanji, word.chapter, word.note, 1 if user_defined else 0)
                 cursor.execute(self.__INSERT_STATEMENT, word_tuple)
             cursor.close()
         except sqlite3.Error as err:
