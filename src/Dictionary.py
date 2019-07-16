@@ -1,9 +1,9 @@
 import Database
-import random
+import tree
 
 
 class Word:
-    def __init__(self, english=None, chapter=0, romaji='', hiragana='', katakana='', kanji='', note=''):
+    def __init__(self, english=None, romaji='', kanji='', chapter=0, note=''):
         if english is None:
             self.english = []
         else:
@@ -11,8 +11,8 @@ class Word:
         self.chapter = chapter
         self.kanji = kanji
         self.romaji = romaji
-        self.hiragana = hiragana
-        self.katakana = katakana
+        self.hiragana = tree.convert_to_kana(romaji, tree.HIRAGANA)
+        self.katakana = tree.convert_to_kana(romaji, tree.KATAKANA)
         self.note = note
 
 
