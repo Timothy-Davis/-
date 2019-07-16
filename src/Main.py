@@ -1,9 +1,7 @@
-from Dictionary import global_dictionary
-
+import WordDatabase
 
 def init():
-    global_dictionary.init()
-
+    WordDatabase.init()
 
 def main():
     init()
