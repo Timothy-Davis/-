@@ -35,16 +35,14 @@ __DATABASE_PATH = __DATABASE_DIR + __DATABASE_NAME
 
 
 class Word:
-    def __init__(self, english=None, romaji='', kanji='', chapter=0, note=''):
-        if english is None:
-            self.english = []
-        else:
-            self.english = english
+    def __init__(self, english=None, romaji='', kanji='', chapter=0, grammar_types=None, note=''):
+        self.english = english if english is not None else []
+        self.grammar_types = grammar_types if grammar_types is not None else []
         self.chapter = chapter
         self.kanji = kanji
         self.romaji = romaji
-        self.hiragana = tree.convert_to_kana(romaji, tree.HIRAGANA)
-        self.katakana = tree.convert_to_kana(romaji, tree.KATAKANA)
+        self.hiragana = tree.convert_to_kana(romaji, tree.HIRAGANA) if romaji is not '' else None
+        self.katakana = tree.convert_to_kana(romaji, tree.KATAKANA) if romaji is not '' else None
         self.note = note
 
 
@@ -58,14 +56,15 @@ class __DatabaseInterfaceV010:
     """
 
     __WORD_TABLE_NAME = 'words'
-    WORD_FIELDS = ['id', 'english', 'romaji', 'kanji', 'chapter', 'note', 'user_added']
+    WORD_FIELDS = ['id', 'english', 'romaji', 'kanji', 'chapter', 'grammar_types', 'note', 'user_added']
     WORD_ID_FIELD = 0
     WORD_ENGLISH_FIELD = 1
     WORD_ROMAJI_FIELD = 2
     WORD_KANJI_FIELD = 3
     WORD_CHAPTER_FIELD = 4
-    WORD_NOTE_FIELD = 5
-    WORD_USER_ADDED_FIELD = 6
+    WORD_GRAMMAR_TYPES_FIELD = 5
+    WORD_NOTE_FIELD = 6
+    WORD_USER_ADDED_FIELD = 7
 
     __VERSION_TABLE_NAME = 'version_info'
     VERSION_FIELDS = ['id', 'version_major', 'version_minor', 'version_patch']
@@ -83,6 +82,7 @@ class __DatabaseInterfaceV010:
                 romaji text NOT NULL,
                 kanji text NOT NULL,
                 chapter integer NOT NULL,
+                grammar_types text NOT NULL,
                 note text,
                 user_added integer NOT NULL
             );
@@ -98,11 +98,12 @@ class __DatabaseInterfaceV010:
         ''',
     ]
 
-    __INSERT_STATEMENT = '''INSERT INTO words(english,romaji,kanji,chapter,note,user_added) VALUES(?,?,?,?,?,?)'''
+    __INSERT_STATEMENT = '''INSERT INTO words(english,romaji,kanji,chapter,grammar_types,note,user_added) 
+                            VALUES(?,?,?,?,?,?,?)'''
     __VERSION_INSERT_STATEMENT = '''INSERT INTO version_info(version_major,version_minor,version_patch) VALUES(?,?,?)'''
 
     def __init__(self, db_path):
-        if db_path is None:
+        if db_path is None or db_path is '':
             raise ValueError('Database path is invalid!')
         self.db_path = db_path
         self.db_conn = None
@@ -123,7 +124,7 @@ class __DatabaseInterfaceV010:
             if self.db_conn is not None:
                 self.db_conn.close()
                 self.db_conn = None
-                raise exceptions.DatabaseError('Error connection to SQLite DB:\n'+str(e))
+            raise exceptions.DatabaseError('Error connection to SQLite DB:\n'+str(e))
 
     def create_new(self):
         """
@@ -167,8 +168,9 @@ class __DatabaseInterfaceV010:
         if self.db_conn is not None:
             try:
                 cursor = self.db_conn.cursor()
-                eng = word.english.join('_')
-                word_tuple = (eng, word.romaji, word.kanji, word.chapter, word.note, 1 if user_defined else 0)
+                eng = '_'.join(word.english)
+                grammar = '_'.join(word.grammar_types)
+                word_tuple = (eng, word.romaji, word.kanji, word.chapter, grammar, word.note, 1 if user_defined else 0)
                 cursor.execute(self.__INSERT_STATEMENT, word_tuple)
                 cursor.close()
             except sqlite3.Error as e:
@@ -181,7 +183,8 @@ class __DatabaseInterfaceV010:
             cursor = self.db_conn.cursor()
             for word in words:
                 eng = '_'.join(word.english)
-                word_tuple = (eng, word.romaji, word.kanji, word.chapter, word.note, 1 if user_defined else 0)
+                grammar = '_'.join(word.grammar_types)
+                word_tuple = (eng, word.romaji, word.kanji, word.chapter, grammar, word.note, 1 if user_defined else 0)
                 cursor.execute(self.__INSERT_STATEMENT, word_tuple)
             cursor.close()
         except sqlite3.Error as err:
@@ -209,7 +212,9 @@ class __DatabaseInterfaceV010:
                 kanji = None if word[self.WORD_KANJI_FIELD] is 'None' else word[self.WORD_KANJI_FIELD]
                 note = None if word[self.WORD_NOTE_FIELD] is 'None' else word[self.WORD_NOTE_FIELD]
                 eng = word[self.WORD_ENGLISH_FIELD].split('_')
-                word_list.append(Word(eng, word[self.WORD_ROMAJI_FIELD], kanji, word[self.WORD_CHAPTER_FIELD], note))
+                grammar = word[self.WORD_GRAMMAR_TYPES_FIELD].split('_')
+                new_word = Word(eng, word[self.WORD_ROMAJI_FIELD], kanji, word[self.WORD_CHAPTER_FIELD], grammar, note)
+                word_list.append(new_word)
             return word_list
         else:
             raise exceptions.DatabaseError('Can\'t fetch words without a connection!')
@@ -250,6 +255,7 @@ def __create_connection(path):
             real_word.romaji = word[default_wordbank.ROMAJI_INDEX]
             real_word.kanji = word[default_wordbank.KANJI_INDEX]
             real_word.chapter = word[default_wordbank.CHAPTER_INDEX]
+            real_word.grammar_types = word[default_wordbank.GRAMMAR_INDEX].split('_')
             real_word.note = word[default_wordbank.NOTE_INDEX]
             default_words.append(real_word)
         conn.batch_insert(default_words, False)
@@ -292,6 +298,7 @@ if __name__ == '__main__':
               current_word.katakana, '|',
               current_word.kanji, '|',
               current_word.chapter, '|',
+              current_word.grammar_types, '|',
               current_word.note)
     print('All Words:')
     for current_word in dict1.wordlist:
@@ -301,4 +308,5 @@ if __name__ == '__main__':
               current_word.katakana, '|',
               current_word.kanji, '|',
               current_word.chapter, '|',
+              current_word.grammar_types, '|',
               current_word.note)
