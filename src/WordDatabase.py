@@ -242,6 +242,24 @@ class Dictionary:
     def random_word(self):
         return random.choice(self.wordlist)
 
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        output_str = ''
+        for word in self.wordlist:
+            output_str += '('
+            output_str += str(word.english) + '|'
+            output_str += word.romaji + '|'
+            output_str += word.hiragana + '|'
+            output_str += word.katakana + '|'
+            output_str += word.kanji + '|'
+            output_str += str(word.chapter) + '|'
+            output_str += str(word.grammar_types) + '|'
+            output_str += word.note
+            output_str += ')\n'
+        return output_str
+
 
 def __create_connection(path):
     database_existed = os.path.exists(__DATABASE_DIR) and os.path.exists(__DATABASE_PATH)
@@ -306,69 +324,15 @@ def create_dictionary(chapters: Tuple[int, int] = None, grammar_types: Tuple[str
 
 if __name__ == '__main__':
     init()
-    dict1 = create_dictionary()
-    dict2 = create_dictionary(chapters=(3, 8))
-    dict3 = create_dictionary(grammar_types=('adjective'))
-    dict4 = create_dictionary(grammar_types=('い-adjective'))
-    dict5 = create_dictionary(grammar_types=('noun', 'pronoun'))
-    dict6 = create_dictionary(chapters=(0, 5), grammar_types=('pronoun'))
-    print('All pronouns before chapter 6:')
-    for current_word in dict6.wordlist:
-        print(current_word.english, '|',
-              current_word.romaji, '|',
-              current_word.hiragana, '|',
-              current_word.katakana, '|',
-              current_word.kanji, '|',
-              current_word.chapter, '|',
-              current_word.grammar_types, '|',
-              current_word.note)
-    print('All nouns and pronouns')
-    for current_word in dict5.wordlist:
-        print(current_word.english, '|',
-              current_word.romaji, '|',
-              current_word.hiragana, '|',
-              current_word.katakana, '|',
-              current_word.kanji, '|',
-              current_word.chapter, '|',
-              current_word.grammar_types, '|',
-              current_word.note)
-    print('All い-adjectives only: ')
-    for current_word in dict4.wordlist:
-        print(current_word.english, '|',
-              current_word.romaji, '|',
-              current_word.hiragana, '|',
-              current_word.katakana, '|',
-              current_word.kanji, '|',
-              current_word.chapter, '|',
-              current_word.grammar_types, '|',
-              current_word.note)
-    print('All adjectives only:')
-    for current_word in dict3.wordlist:
-        print(current_word.english, '|',
-              current_word.romaji, '|',
-              current_word.hiragana, '|',
-              current_word.katakana, '|',
-              current_word.kanji, '|',
-              current_word.chapter, '|',
-              current_word.grammar_types, '|',
-              current_word.note)
-    print('Words in chapters 3 through 8:')
-    for current_word in dict2.wordlist:
-        print(current_word.english, '|',
-              current_word.romaji, '|',
-              current_word.hiragana, '|',
-              current_word.katakana, '|',
-              current_word.kanji, '|',
-              current_word.chapter, '|',
-              current_word.grammar_types, '|',
-              current_word.note)
     print('All Words:')
-    for current_word in dict1.wordlist:
-        print(current_word.english, '|',
-              current_word.romaji, '|',
-              current_word.hiragana, '|',
-              current_word.katakana, '|',
-              current_word.kanji, '|',
-              current_word.chapter, '|',
-              current_word.grammar_types, '|',
-              current_word.note)
+    print(create_dictionary())
+    print('Words in chapters 3 through 8:')
+    print(create_dictionary(chapters=(3, 8)))
+    print('All adjectives only:')
+    print(create_dictionary(grammar_types=('adjective')))
+    print('All い-adjectives only: ')
+    print(create_dictionary(grammar_types=('い-adjective')))
+    print('All nouns and pronouns')
+    print(create_dictionary(grammar_types=('noun', 'pronoun')))
+    print('All pronouns before chapter 6:')
+    print(create_dictionary(chapters=(0, 5), grammar_types=('pronoun')))
