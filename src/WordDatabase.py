@@ -23,7 +23,7 @@ from typing import Union, List, Tuple
 
 import default_wordbank
 import exceptions
-import tree
+import conversion
 
 # Note: We use japanese only for the Windows name because not all non-nt systems are guaranteed to support
 # Unicode filenames!
@@ -41,8 +41,8 @@ class Word:
         self.chapter = chapter
         self.kanji = kanji
         self.romaji = romaji
-        self.hiragana = tree.convert_to_kana(romaji, tree.HIRAGANA) if romaji is not '' else None
-        self.katakana = tree.convert_to_kana(romaji, tree.KATAKANA) if romaji is not '' else None
+        self.hiragana = conversion.convert_to_kana(romaji, conversion.HIRAGANA) if romaji is not '' else None
+        self.katakana = conversion.convert_to_kana(romaji, conversion.KATAKANA) if romaji is not '' else None
         self.note = note
 
 
