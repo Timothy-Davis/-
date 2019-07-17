@@ -28,8 +28,8 @@ import tree
 # Note: We use japanese only for the Windows name because not all non-nt systems are guaranteed to support
 # Unicode filenames!
 __DATABASE_NAME = 'wordbank.db'
-__DATABASE_DIR_WIN = '~/Documents/日本語のゲイム/'
-__DATABASE_DIR_DEF = '~/.config/nihongonogeimu/'
+__DATABASE_DIR_WIN = '~/Documents/日本語のミニゲイム'
+__DATABASE_DIR_DEF = '~/.config/nihongonominigeimu/'
 __DATABASE_DIR = os.path.expanduser(__DATABASE_DIR_WIN if os.name is 'nt' else __DATABASE_DIR_DEF)
 __DATABASE_PATH = __DATABASE_DIR + __DATABASE_NAME
 
