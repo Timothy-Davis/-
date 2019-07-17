@@ -19,6 +19,13 @@ somehow been damaged/is missing.
 # Although this file is currently not very organized, in the future it would be best moving forward if words are kept in
 # order by their chapter. Words not belonging to any chapter should be at the end of the list, with chapter number 0.
 
+FIELDS = 5
+ENGLISH_INDEX = 0
+ROMAJI_INDEX = 1
+KANJI_INDEX = 2
+CHAPTER_INDEX = 3
+NOTE_INDEX = 4
+
 words = [
     ('this one', 'kore', 'None', 2, 'None'),
 
@@ -39,9 +46,8 @@ words = [
 
 
 def __check_word(check_word):
-    __FIELDS = 5
-    if len(check_word) != __FIELDS:
-        return 'There are not exactly ' + str(__FIELDS) + ' fields!'
+    if len(check_word) != FIELDS:
+        return 'There are not exactly ' + str(FIELDS) + ' fields!'
     for item in check_word:
         if item is None:
             return 'No item should be None type! Use \'None\' instead!'

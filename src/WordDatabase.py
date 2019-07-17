@@ -15,11 +15,11 @@ Dictionaries from queries, as well as providing the global_dictionary, which is 
 # it is better if all database operations are completed through the helper functions to avoid corrupting any future
 # databases!
 
-# TODO: Implement a singular Fetch function that allows fetching based on criteria (such as chapter range)
-
 import os
 import random
 import sqlite3
+
+from typing import Union, List
 
 import default_wordbank
 import exceptions
@@ -30,7 +30,7 @@ import tree
 __DATABASE_NAME = 'wordbank.db'
 __DATABASE_DIR_WIN = '~/Documents/日本語のゲイム/'
 __DATABASE_DIR_DEF = '~/.config/nihongonogeimu/'
-__DATABASE_DIR = __DATABASE_DIR_WIN if os.name is 'nt' else __DATABASE_DIR_DEF
+__DATABASE_DIR = os.path.expanduser(__DATABASE_DIR_WIN if os.name is 'nt' else __DATABASE_DIR_DEF)
 __DATABASE_PATH = __DATABASE_DIR + __DATABASE_NAME
 
 
@@ -98,7 +98,7 @@ class __DatabaseInterfaceV010:
         ''',
     ]
 
-    __INSERT_STATEMENT = 'INSERT INTO words(english,romaji,kanji,chapter,note,user_added) VALUES(?,?,?,?,?,?)'
+    __INSERT_STATEMENT = '''INSERT INTO words(english,romaji,kanji,chapter,note,user_added) VALUES(?,?,?,?,?,?)'''
     __VERSION_INSERT_STATEMENT = '''INSERT INTO version_info(version_major,version_minor,version_patch) VALUES(?,?,?)'''
 
     def __init__(self, db_path):
@@ -145,7 +145,7 @@ class __DatabaseInterfaceV010:
             except sqlite3.Error as e:
                 raise exceptions.DatabaseError('Error creating tables:\n'+str(e))
         else:
-            raise exceptions.DatabaseError("Can't setup version table without a connection!")
+            raise exceptions.DatabaseError('Can\'t setup version table without a connection!')
 
     def __setup_version_table(self):
         if self.db_conn is not None:
@@ -156,7 +156,7 @@ class __DatabaseInterfaceV010:
             except sqlite3.Error as e:
                 raise exceptions.DatabaseError('Error inserting version info:\n'+str(e))
         else:
-            raise exceptions.DatabaseError("Can't setup version table without a connection!")
+            raise exceptions.DatabaseError('Can\'t setup version table without a connection!')
 
     def insert_word(self, word: Word, user_defined=False):
         """
@@ -176,27 +176,31 @@ class __DatabaseInterfaceV010:
         else:
             raise exceptions.DatabaseError('Unable to insert word without a connection!')
 
-    def batch_insert(self, words: list, user_defined=False):
+    def batch_insert(self, words: List[Word], user_defined=False):
         try:
             cursor = self.db_conn.cursor()
             for word in words:
-                eng = word.english.join('_')
+                eng = '_'.join(word.english)
                 word_tuple = (eng, word.romaji, word.kanji, word.chapter, word.note, 1 if user_defined else 0)
                 cursor.execute(self.__INSERT_STATEMENT, word_tuple)
             cursor.close()
         except sqlite3.Error as err:
-            print("Error inserting new word into DB:")
+            print('Error inserting new word into DB:')
             print(err)
 
-    def fetch_all(self) -> list:
+    def fetch(self, whereclause: Union[str, None] = None) -> List[Word]:
         """
-        Retrieves all words from the Database in a list
-        :return: A list of Word objects from the Database
+        Returns a List object containing all the words in the database matching the passed SQL WHERE clause
+        :param whereclause: A str representing the WHERE comparison, not including the WHERE itself
+        :return: A List of Word objects representing the words in the database that matched the request
         """
         word_list = []
         if self.db_conn is not None:
             cursor = self.db_conn.cursor()
-            cursor.execute(f'SELECT * FROM {self.__WORD_TABLE_NAME}')
+            sql_statement = f'SELECT * FROM {self.__WORD_TABLE_NAME}'
+            if whereclause is not None:
+                sql_statement += f' WHERE {whereclause}'
+            cursor.execute(sql_statement)
             raw_word_list = cursor.fetchall()
             cursor.close()
             for word in raw_word_list:
@@ -209,6 +213,9 @@ class __DatabaseInterfaceV010:
             return word_list
         else:
             raise exceptions.DatabaseError('Can\'t fetch words without a connection!')
+
+    def fetch_all(self) -> list:
+        return self.fetch()
 
 
 class Dictionary:
@@ -235,7 +242,17 @@ def __create_connection(path):
         # Easy, just make the latest version connection
         conn = __DatabaseInterfaceV010(path)
         conn.create_new()
-        conn.batch_insert(default_wordbank.words, False)
+        default_words = []
+        for word in default_wordbank.words:
+            # We cheat a little bit here and don't set the hiragana or katakana since the DB will discard it anyway
+            real_word = Word()
+            real_word.english = word[default_wordbank.ENGLISH_INDEX].split('_')
+            real_word.romaji = word[default_wordbank.ROMAJI_INDEX]
+            real_word.kanji = word[default_wordbank.KANJI_INDEX]
+            real_word.chapter = word[default_wordbank.CHAPTER_INDEX]
+            real_word.note = word[default_wordbank.NOTE_INDEX]
+            default_words.append(real_word)
+        conn.batch_insert(default_words, False)
         return conn
     else:
         # Right now, we only have one version. Later we'll have to start checking the version number...
@@ -260,14 +277,24 @@ def create_dictionary(chapters=None) -> Dictionary:
     if chapters is None:
         return Dictionary(__database_connection.fetch_all())
     else:
-        raise NotImplemented('Fetching by chapter is not yet implemented!')
-    # __database_connection.fetch(where_clause='CHAPTERS')
+        return Dictionary(__database_connection.fetch(whereclause=f'chapter BETWEEN {chapters[0]} AND {chapters[1]}'))
 
 
 if __name__ == '__main__':
     init()
-    dictionary = create_dictionary()
-    for current_word in dictionary.wordlist:
+    dict1 = create_dictionary()
+    dict2 = create_dictionary(chapters=(3, 8))
+    print('Words in chapters 3 through 8:')
+    for current_word in dict2.wordlist:
+        print(current_word.english, '|',
+              current_word.romaji, '|',
+              current_word.hiragana, '|',
+              current_word.katakana, '|',
+              current_word.kanji, '|',
+              current_word.chapter, '|',
+              current_word.note)
+    print('All Words:')
+    for current_word in dict1.wordlist:
         print(current_word.english, '|',
               current_word.romaji, '|',
               current_word.hiragana, '|',
