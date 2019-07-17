@@ -19,7 +19,7 @@ import os
 import random
 import sqlite3
 
-from typing import Union, List
+from typing import Union, List, Tuple
 
 import default_wordbank
 import exceptions
@@ -191,18 +191,23 @@ class __DatabaseInterfaceV010:
             print('Error inserting new word into DB:')
             print(err)
 
-    def fetch(self, whereclause: Union[str, None] = None) -> List[Word]:
+    def fetch(self, whereclauses: Union[List[str], None] = None) -> List[Word]:
         """
         Returns a List object containing all the words in the database matching the passed SQL WHERE clause
-        :param whereclause: A str representing the WHERE comparison, not including the WHERE itself
+        :param whereclauses: A List of strings representing the WHERE comparisons, not including the WHERE itself
         :return: A List of Word objects representing the words in the database that matched the request
         """
         word_list = []
         if self.db_conn is not None:
             cursor = self.db_conn.cursor()
             sql_statement = f'SELECT * FROM {self.__WORD_TABLE_NAME}'
-            if whereclause is not None:
-                sql_statement += f' WHERE {whereclause}'
+            if whereclauses is not None:
+                if len(whereclauses) is 1:
+                    sql_statement += f' WHERE {whereclauses[0]}'
+                else:
+                    sql_statement += f' WHERE {whereclauses[0]}'
+                    for clause in whereclauses[1:]:
+                        sql_statement += f' AND {clause}'
             cursor.execute(sql_statement)
             raw_word_list = cursor.fetchall()
             cursor.close()
@@ -274,22 +279,79 @@ def init():
     __database_connection = __create_connection(__DATABASE_PATH)
 
 
-def create_dictionary(chapters=None) -> Dictionary:
+def create_dictionary(chapters: Tuple[int, int] = None, grammar_types: Tuple[str, ...] = None) -> Dictionary:
     """
     Returns a new Dictionary that conforms to the passed parameters
     :param chapters: A 2-element Tuple defining the range (inclusive), or None for all chapters. Default value is None.
+    :param grammar_types: A Tuple defining all the grammar types to filter by. Valid types are in
+           default_wordbank.VALID_GRAMMAR_TYPES
     :return: A Dictionary object representing the filtered list of words.
     """
-    if chapters is None:
+    if chapters is None and grammar_types is None:
         return Dictionary(__database_connection.fetch_all())
     else:
-        return Dictionary(__database_connection.fetch(whereclause=f'chapter BETWEEN {chapters[0]} AND {chapters[1]}'))
+        clauses = []
+        if chapters is not None:
+            clauses.append(f'chapter BETWEEN {chapters[0]} AND {chapters[1]}')
+        if grammar_types is not None:
+            grammar_clause = '('
+            grammar_clause += f'instr(grammar_types, \'{grammar_types[0]}\') > 0'
+            if len(grammar_types) > 1:
+                for grammar_type in grammar_types[1:]:
+                    grammar_clause += f' OR instr(grammar_types, \'{grammar_types[0]}\') > 0'
+            grammar_clause += ')'
+            clauses.append(grammar_clause)
+        return Dictionary(__database_connection.fetch(whereclauses=clauses))
 
 
 if __name__ == '__main__':
     init()
     dict1 = create_dictionary()
     dict2 = create_dictionary(chapters=(3, 8))
+    dict3 = create_dictionary(grammar_types=('adjective'))
+    dict4 = create_dictionary(grammar_types=('い-adjective'))
+    dict5 = create_dictionary(grammar_types=('noun', 'pronoun'))
+    dict6 = create_dictionary(chapters=(0, 5), grammar_types=('pronoun'))
+    print('All pronouns before chapter 6:')
+    for current_word in dict6.wordlist:
+        print(current_word.english, '|',
+              current_word.romaji, '|',
+              current_word.hiragana, '|',
+              current_word.katakana, '|',
+              current_word.kanji, '|',
+              current_word.chapter, '|',
+              current_word.grammar_types, '|',
+              current_word.note)
+    print('All nouns and pronouns')
+    for current_word in dict5.wordlist:
+        print(current_word.english, '|',
+              current_word.romaji, '|',
+              current_word.hiragana, '|',
+              current_word.katakana, '|',
+              current_word.kanji, '|',
+              current_word.chapter, '|',
+              current_word.grammar_types, '|',
+              current_word.note)
+    print('All い-adjectives only: ')
+    for current_word in dict4.wordlist:
+        print(current_word.english, '|',
+              current_word.romaji, '|',
+              current_word.hiragana, '|',
+              current_word.katakana, '|',
+              current_word.kanji, '|',
+              current_word.chapter, '|',
+              current_word.grammar_types, '|',
+              current_word.note)
+    print('All adjectives only:')
+    for current_word in dict3.wordlist:
+        print(current_word.english, '|',
+              current_word.romaji, '|',
+              current_word.hiragana, '|',
+              current_word.katakana, '|',
+              current_word.kanji, '|',
+              current_word.chapter, '|',
+              current_word.grammar_types, '|',
+              current_word.note)
     print('Words in chapters 3 through 8:')
     for current_word in dict2.wordlist:
         print(current_word.english, '|',

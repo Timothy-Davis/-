@@ -46,6 +46,7 @@ words = [
     ('cold', 'samui', '寒い', 5, 'adjective_い-adjective', 'None'),
     ('hot', 'atsui', '暑い', 5, 'adjective_い-adjective', 'Hot Weather'),
     ('hot', 'atsui', '熱い', 5, 'adjective_い-adjective', 'Hot to the Touch'),
+    ('fond_likeable', 'suki', '好き', 5, 'adjective_な-adjective', 'None'),
 
     ('my older sister', 'ane', '姉', 7, 'pronoun', 'None'),
 
