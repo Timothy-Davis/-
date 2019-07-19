@@ -187,7 +187,7 @@ parse_tree ={
                      },
         }
 
-TSU_CONSONANTS = ['k', 's', 'z', 'j', 't', 'd', 'c', 'h', 'b', 'f', 'm', 'y', 'r', 'w', 'g']
+TSU_CONSONANTS = ['k', 's', 'z', 'j', 't', 'd', 'c', 'h', 'b', 'f', 'm', 'y', 'r', 'w', 'g', 'p']
 
 HIRAGANA = False
 KATAKANA = True
