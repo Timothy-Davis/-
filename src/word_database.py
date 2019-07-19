@@ -1,4 +1,4 @@
-"""
+﻿"""
 Word Database is the center for all operations on the list of all words that are both stored on the User's computer, and
 that are kept in memory by the program at runtime. This module defines the Dictionary class, and functions for creating
 Dictionaries from queries, as well as providing the global_dictionary, which is the dictionary containing all words.
@@ -28,7 +28,7 @@ import conversion
 # Note: We use japanese only for the Windows name because not all non-nt systems are guaranteed to support
 # Unicode filenames!
 __DATABASE_NAME = 'wordbank.db'
-__DATABASE_DIR_WIN = '~/Documents/日本語のミニゲイム'
+__DATABASE_DIR_WIN = '~/Documents/日本語のミニゲイム/'
 __DATABASE_DIR_DEF = '~/.config/nihongonominigeimu/'
 __DATABASE_DIR = os.path.expanduser(__DATABASE_DIR_WIN if os.name is 'nt' else __DATABASE_DIR_DEF)
 __DATABASE_PATH = __DATABASE_DIR + __DATABASE_NAME
