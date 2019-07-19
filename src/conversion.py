@@ -210,7 +210,7 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
 
         # Unfortunately, special logic is also needed to handle singular ん and double-consonant n-types.
         if romaji[index] == 'n':
-            if index+1 == len(romaji) or romaji[index+1] == 'n':
+            if index+1 == len(romaji) or romaji[index+1] == 'n' or romaji[index+1] in TSU_CONSONANTS:
                 if kana is KATAKANA:
                     output_str += 'ン'
                 else:
