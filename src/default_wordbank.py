@@ -108,7 +108,7 @@ words = [
     ('...year student_year student', 'nensei', '年生', 1, 'suffix_noun', 'Grammatically, this is a noun that is only '
                                                                          'ever used as a suffix.'),
     ('yes', 'hai', 'None', 1, 'unclassified', 'None'),
-    ('half', 'han', '半', 1, 'noun', 'None'),  # Yes, apparently according to https://jisho.org, half is a noun.
+    ('half', 'han', '半', 1, 'noun', 'None'),  # Yes, apparently. According to https://jisho.org, half is a noun.
     ('number', 'bangou', '番号', 1, 'noun', 'None'),
     ('international student', 'ryuugakusei', '留学生', 1, 'noun', 'None'),
     ('i', 'watashi', '私', 1, 'pronoun', 'None'),
