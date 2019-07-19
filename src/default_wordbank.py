@@ -116,7 +116,7 @@ words = [
     ('britain', 'igirisu', 'None', 1, 'noun', 'None'),
     ('australia', 'oosutoraria', 'None', 1, 'noun', 'None'),
     ('korea', 'kankoku', '韓国', 1, 'noun', 'None'),
-    ('sweden', 'suweeden', 'None', 1, 'noun', 'None'),
+    ('sweden', 'suueden', 'None', 1, 'noun', 'None'),
     ('china', 'chuugoku', '中国', 1, 'noun', 'None'),
     ('science', 'kagaku', '科学', 1, 'noun', 'None'),
     ('asian studies', 'ajiakenkyuu', 'アジア研究', 1, 'noun', 'None'),
