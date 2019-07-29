@@ -316,9 +316,10 @@ def create_dictionary(chapters: Tuple[int, int] = None, grammar_types: Tuple[str
             grammar_clause += f'instr(grammar_types, \'{grammar_types[0]}\') > 0'
             if len(grammar_types) > 1:
                 for grammar_type in grammar_types[1:]:
-                    grammar_clause += f' OR instr(grammar_types, \'{grammar_types[0]}\') > 0'
+                    grammar_clause += f' OR instr(grammar_types, \'{grammar_type}\') > 0'
             grammar_clause += ')'
             clauses.append(grammar_clause)
+        print('CLAUSES:', clauses)
         return Dictionary(__database_connection.fetch(whereclauses=clauses))
 
 
@@ -329,10 +330,10 @@ if __name__ == '__main__':
     print('Words in chapters 3 through 8:')
     print(create_dictionary(chapters=(3, 8)))
     print('All adjectives only:')
-    print(create_dictionary(grammar_types=('adjective')))
+    print(create_dictionary(grammar_types=('adjective',)))
     print('All い-adjectives only: ')
-    print(create_dictionary(grammar_types=('い-adjective')))
+    print(create_dictionary(grammar_types=('い-adjective',)))
     print('All nouns and pronouns')
     print(create_dictionary(grammar_types=('noun', 'pronoun')))
     print('All pronouns before chapter 6:')
-    print(create_dictionary(chapters=(0, 5), grammar_types=('pronoun')))
+    print(create_dictionary(chapters=(0, 5), grammar_types=('pronoun',)))
