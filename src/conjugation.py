@@ -7,22 +7,20 @@ word_database.init()
 # The following method will fill the dictionary that will be used by main
 def fill_dictionary():
     grammar_types = input("1. Verbs \n2. Adjectives \n3. Both \n")
-    starting_chapter = input("Please input the beginning chapter: ")
-    ending_chapter = input("Please input the ending chapter: ")
+
+    starting_chapter = input("Please input the beginning chapter: ").strip()
+    ending_chapter = input("Please input the ending chapter: ").strip()
+
+    chapter_range = (int(starting_chapter) if starting_chapter is not '' else 1,
+                     int(ending_chapter) if ending_chapter is not '' else 1024)
 
     if grammar_types == '1':
-        words = word_database.create_dictionary(
-            chapters=(int(starting_chapter), int(ending_chapter)),
-            grammar_types=('う-verb', 'る-verb'))
+        words = word_database.create_dictionary(chapters=chapter_range, grammar_types=('う-verb', 'る-verb'))
     elif grammar_types == '2':
-        words = word_database.create_dictionary(
-            chapters=(int(starting_chapter), int(ending_chapter)),
-            grammar_types=('い-adjective', 'な-adjective'))
+        words = word_database.create_dictionary(chapters=chapter_range, grammar_types=('い-adjective', 'な-adjective'))
     else:
-        words = word_database.create_dictionary(
-            chapters=(int(starting_chapter), int(ending_chapter)),
-            grammar_types=('い-adjective', 'な-adjective', 'う-verb', 'る-verb'))
-
+        words = word_database.create_dictionary(chapters=chapter_range,
+                                                grammar_types=('い-adjective', 'な-adjective', 'う-verb', 'る-verb'))
     return words
 
 
