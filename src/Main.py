@@ -27,7 +27,6 @@ def main():
     lag = 0
     done = False
     while not done:
-        time_per_frame = time.perf_counter_ns()
         old_time = current_time
         current_time = time.perf_counter_ns()
         lag += current_time - old_time
@@ -44,8 +43,6 @@ def main():
         pygame.display.flip()
 
         done = current_game.is_done()
-        time_per_frame = time.perf_counter_ns() - time_per_frame
-        print(f"Time Per Run: {(time_per_frame/NS_PER_SEC)*1000}")
 
 if __name__ == '__main__':
     main()
