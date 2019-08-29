@@ -260,6 +260,9 @@ class Dictionary:
             output_str += ')\n'
         return output_str
 
+    def __len__(self):
+        return len(self.wordlist)
+
 
 def __create_connection(path):
     database_existed = os.path.exists(__DATABASE_DIR) and os.path.exists(__DATABASE_PATH)
