@@ -1,12 +1,51 @@
-import WordDatabase
+import time
+import pygame
+import word_database
 
-def init():
-    WordDatabase.init()
+from game_base import Game
+from main_menu import MainMenu
+
+DEFAULT_SIZE = (960, 540)
+NS_PER_SEC = 1000000000
+NS_PER_MSEC = 1000000
+NS_PER_MICROSEC = 1000
+UPDATES_PER_SEC = 60
+UPDATE_TIME = NS_PER_SEC/UPDATES_PER_SEC
+
+GAMES = [
+    #MainMenu()
+]
 
 def main():
-    init()
-    pass
+    word_database.init()
+    pygame.init()
+    pygame.display.set_mode(DEFAULT_SIZE)
 
+    current_game: Game = MainMenu()
+
+    current_time = time.perf_counter_ns()
+    lag = 0
+    done = False
+    while not done:
+        time_per_frame = time.perf_counter_ns()
+        old_time = current_time
+        current_time = time.perf_counter_ns()
+        lag += current_time - old_time
+
+        current_game.display()
+
+        for event in pygame.event.get():
+            current_game.handle_pygame_event(event)
+
+        while lag > UPDATE_TIME:
+            current_game.update()
+            lag -= UPDATE_TIME
+
+        pygame.display.flip()
+
+        done = current_game.is_done()
+        time_per_frame = time.perf_counter_ns() - time_per_frame
+        print(f"Time Per Run: {(time_per_frame/NS_PER_SEC)*1000}")
 
 if __name__ == '__main__':
     main()
