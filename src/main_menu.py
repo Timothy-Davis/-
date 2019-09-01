@@ -1,8 +1,9 @@
+import typing
 from abc import abstractmethod, ABC
 import pygame
 import pygame.freetype
 
-from game_base import Game
+from game_base import Game, GameInfo
 
 
 class _MenuOption:
@@ -100,35 +101,68 @@ class NormalMainMenu(MainMenuDelegate):
 
 
 class MiniGameSelectMenu(MainMenuDelegate):
-    def __init__(self, parent, return_callback):
+    GAME_FONT_SIZE = 36
+    GAME_HEIGHT_PERCENT = .25
+    GAME_WIDTH_PERCENT = .30
+    GAME_MIN_X_PERCENT = .03
+    GAME_MIN_Y_PERCENT = .25/4
+
+    def __init__(self, parent, return_callback, mini_games: typing.List[GameInfo]):
         super().__init__(parent, return_callback)
-        self.red = 0
-        self.count = 3
+        self.mini_games: typing.List[GameInfo] = mini_games
+        self.game = None
+        self.game_width = self.GAME_WIDTH_PERCENT * self.parent.surface.get_width()
+        self.game_height = self.GAME_HEIGHT_PERCENT * self.parent.surface.get_height()
+
+    def _draw_game_box(self, x, y, game_title):
+        game_rect = pygame.Rect(x, y, self.game_width, self.game_height)
+        pygame.draw.rect(self.parent.surface, (255, 255, 255), game_rect)
+        game_rect.x += 2
+        game_rect.y += 2
+        game_rect.width -= 4
+        game_rect.height -= 4
+        pygame.draw.rect(self.parent.surface, (0, 0, 0), game_rect)
+
+        # TODO: We have code duplication here. This entire module could really do with some refactoring later.
+        font_options = {
+            'fgcolor': (255, 255, 255),
+            'bgcolor': (0, 0, 0),
+            'style': pygame.freetype.STYLE_DEFAULT,
+            'rotation': 0,
+            'size': self.GAME_FONT_SIZE
+        }
+        font_surface = self.parent.font.render(game_title, **font_options)[0]
+
+        x = self.game_width/2 - font_surface.get_width()/2 + x
+        y = self.game_height/2 - font_surface.get_height()/2 + y
+        self.parent.surface.blit(font_surface, (x, y))
 
     def display(self):
-        self.parent.surface.fill((self.red, 0, 0))
+        self.parent.surface.fill((0, 0, 0))
+        x = self.GAME_MIN_X_PERCENT * self.parent.surface.get_width()
+        y = self.GAME_MIN_Y_PERCENT * self.parent.surface.get_height()
+        for game in self.mini_games:
+            self._draw_game_box(x, y, game.title)
+            x += self.GAME_WIDTH_PERCENT*self.parent.surface.get_width() + 20
+            y += self.GAME_HEIGHT_PERCENT*self.parent.surface.get_height() + 20
 
     def handle_event(self, event) -> None:
         pass
 
     def update(self) -> None:
-        self.red += 1
-        self.red %= 256
-        if self.red == 0:
-            self.count -= 1
-        if self.count is 0:
-            self.return_to_main_menu()
+        pass
 
     def selected_game(self) -> Game:
-        return None
+        return self.game
+
 
 class MainMenu(Game):
-    def __init__(self):
+    def __init__(self, available_games: typing.List[GameInfo]):
         super().__init__(show_menu_bar=False)
         self.font = pygame.freetype.Font("./fonts/NotoSansCJKjp-Regular.otf")
 
         def return_callback(): self._change_state(None)
-        self.mini_game_select_delegate = MiniGameSelectMenu(self, return_callback)
+        self.mini_game_select_delegate = MiniGameSelectMenu(self, return_callback, available_games)
 
         menu_options = [
             ("Mini Games", self._change_state, self.mini_game_select_delegate),
@@ -148,14 +182,15 @@ class MainMenu(Game):
     def update(self):
         self.delegate.update()
 
+    def title(self):
+        return 'Main Menu'
+
     def _change_state(self, delegate):
         if delegate is not None:
             self.delegate = delegate
         else:
             self.delegate = self.main_menu
 
-    def selected_game(self):
-        if self.delegate is not self.mini_game_select_delegate:
-            return None
-        else:
-            return self.delegate.selected_game()
+    @classmethod
+    def info(cls) -> typing.Optional[GameInfo]:
+        return GameInfo("Main Menu", constructor=cls)
