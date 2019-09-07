@@ -2,8 +2,9 @@ import typing
 from abc import abstractmethod, ABC
 import pygame
 import pygame.freetype
+import simple_ui
 
-from game_base import Game, GameInfo
+from game_base import Game, GameInfo, SWAP_GAME, END_GAME
 
 
 class _MenuOption:
@@ -30,6 +31,8 @@ class MainMenuDelegate(ABC):
     def __init__(self, parent, return_callback):
         self.return_callback = return_callback
         self.parent = parent
+        self.has_event: bool = False
+        self.event: pygame.event.Event = None
 
     @abstractmethod
     def display(self) -> None:
@@ -109,51 +112,69 @@ class MiniGameSelectMenu(MainMenuDelegate):
 
     def __init__(self, parent, return_callback, mini_games: typing.List[GameInfo]):
         super().__init__(parent, return_callback)
-        self.mini_games: typing.List[GameInfo] = mini_games
-        self.game = None
         self.game_width = self.GAME_WIDTH_PERCENT * self.parent.surface.get_width()
         self.game_height = self.GAME_HEIGHT_PERCENT * self.parent.surface.get_height()
+        self.game: typing.Optional[GameInfo] = None
+        self.mini_games: typing.List[typing.Tuple[pygame.Rect, GameInfo]] = []
 
-    def _draw_game_box(self, x, y, game_title):
-        game_rect = pygame.Rect(x, y, self.game_width, self.game_height)
-        pygame.draw.rect(self.parent.surface, (255, 255, 255), game_rect)
-        game_rect.x += 2
-        game_rect.y += 2
-        game_rect.width -= 4
-        game_rect.height -= 4
-        pygame.draw.rect(self.parent.surface, (0, 0, 0), game_rect)
-
-        # TODO: We have code duplication here. This entire module could really do with some refactoring later.
-        font_options = {
-            'fgcolor': (255, 255, 255),
-            'bgcolor': (0, 0, 0),
-            'style': pygame.freetype.STYLE_DEFAULT,
-            'rotation': 0,
-            'size': self.GAME_FONT_SIZE
-        }
-        font_surface = self.parent.font.render(game_title, **font_options)[0]
-
-        x = self.game_width/2 - font_surface.get_width()/2 + x
-        y = self.game_height/2 - font_surface.get_height()/2 + y
-        self.parent.surface.blit(font_surface, (x, y))
-
-    def display(self):
-        self.parent.surface.fill((0, 0, 0))
+        self.ui_items: typing.List[simple_ui.SimpleUIElement] = []
         x = self.GAME_MIN_X_PERCENT * self.parent.surface.get_width()
         y = self.GAME_MIN_Y_PERCENT * self.parent.surface.get_height()
-        for game in self.mini_games:
-            self._draw_game_box(x, y, game.title)
+        for game in mini_games:
+            item: simple_ui.SpinnerBox = simple_ui.SpinnerBox(x, y, 0, 0, 100)
+            item.add_value_change_callback(lambda thing: print(f'Value changed to {thing.value}!'))
+            self.ui_items.append(item)
+            # game_rect = pygame.Rect(x, y, self.game_width, self.game_height)
+            # self.mini_games.append((game_rect, game))
             x += self.GAME_WIDTH_PERCENT*self.parent.surface.get_width() + 20
             y += self.GAME_HEIGHT_PERCENT*self.parent.surface.get_height() + 20
 
+    # def _draw_game_box(self, x, y, game_title):
+        # game_rect = pygame.Rect(x, y, self.game_width, self.game_height)
+        # pygame.draw.rect(self.parent.surface, (255, 255, 255), game_rect)
+        # game_rect.x += 2
+        # game_rect.y += 2
+        # game_rect.width -= 4
+        # game_rect.height -= 4
+        # pygame.draw.rect(self.parent.surface, (0, 0, 0), game_rect)
+        #
+        # # TODO: We have code duplication here. This entire module could really do with some refactoring later.
+        # font_options = {
+        #     'fgcolor': (255, 255, 255),
+        #     'bgcolor': (0, 0, 0),
+        #     'style': pygame.freetype.STYLE_DEFAULT,
+        #     'rotation': 0,
+        #     'size': self.GAME_FONT_SIZE
+        # }
+        # font_surface = self.parent.font.render(game_title, **font_options)[0]
+        #
+        # x = self.game_width/2 - font_surface.get_width()/2 + x
+        # y = self.game_height/2 - font_surface.get_height()/2 + y
+        # self.parent.surface.blit(font_surface, (x, y))
+
+    def display(self):
+        self.parent.surface.fill((0, 0, 0))
+        for item in self.ui_items:
+            self.parent.surface.blit(item.draw_self(), (item.x, item.y))
+        # self.parent.surface.fill((0, 0, 0))
+        # for game in self.mini_games:
+        #     self._draw_game_box(game[0].x, game[0].y, game[1].title)
+
     def handle_event(self, event) -> None:
-        pass
+        for item in self.ui_items:
+            item.handle_event(event)
+        # if event.type is pygame.MOUSEBUTTONDOWN:
+        #     # for game in self.mini_games:
+        #     #     if game[0].collidepoint(event.pos):
+        #     #         self.game = game[1]
 
     def update(self) -> None:
-        pass
-
-    def selected_game(self) -> Game:
-        return self.game
+        if self.game is not None:
+            self.has_event = True
+            data = {
+                'new_game': self.game
+            }
+            self.event = pygame.event.Event(SWAP_GAME, data)
 
 
 class MainMenu(Game):
@@ -181,6 +202,8 @@ class MainMenu(Game):
 
     def update(self):
         self.delegate.update()
+        if self.delegate.has_event:
+            self.emit_event(self.delegate.event)
 
     def title(self):
         return 'Main Menu'
@@ -193,4 +216,4 @@ class MainMenu(Game):
 
     @classmethod
     def info(cls) -> typing.Optional[GameInfo]:
-        return GameInfo("Main Menu", constructor=cls)
+        return GameInfo("Main Menu", cls, None, img=None)

@@ -19,10 +19,11 @@ EMITTABLE_EVENTS: typing.List[int] = [
 
 
 class GameInfo:
-    def __init__(self, title, constructor, img=None):
+    def __init__(self, title, constructor, *args, img=None):
         self.title = title
         self.init = constructor
         self.img = img
+        self.init_arguments = args
 
 
 class Game(ABC):
@@ -55,7 +56,7 @@ class Game(ABC):
                       emittable events, it will be discarded.
         """
         if event.type in EMITTABLE_EVENTS:
-            self._emitted_events += event
+            self._emitted_events.append(event)
 
     def emitted_events(self) -> typing.List[pygame.event.Event]:
         """

@@ -34,11 +34,15 @@ def main():
     game: Game = main_menu
 
     current_time = time.perf_counter_ns()
+    title = 'nihongonominigeimu'
     lag = 0
+    second_lag = 0
+    fps = 0
     while True:
         old_time = current_time
         current_time = time.perf_counter_ns()
         lag += current_time - old_time
+        second_lag += current_time - old_time
 
         for event in pygame.event.get():
             game.handle_pygame_event(event)
@@ -49,6 +53,12 @@ def main():
             game.update()
             lag -= UPDATE_TIME
         game.display()
+        fps += 1
+
+        while second_lag > NS_PER_SEC:
+            second_lag -= NS_PER_SEC
+            pygame.display.set_caption(title + f" : FPS={fps}")
+            fps = 0
 
         pygame.display.flip()
 
@@ -57,7 +67,7 @@ def main():
                 game = main_menu
             elif event.type is SWAP_GAME:
                 if event.new_game is not None:
-                    game = event.new_game()
+                    game = event.new_game.init(event.new_game.init_arguments)
 
 
 if __name__ == '__main__':
