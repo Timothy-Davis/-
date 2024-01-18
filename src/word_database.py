@@ -45,6 +45,19 @@ class Word:
         self.katakana = conversion.convert_to_kana(romaji, conversion.KATAKANA) if romaji is not '' else None
         self.note = note
 
+    def __str__(self):
+        output_str = ""
+        output_str += '('
+        output_str += str(self.english) + '|'
+        output_str += self.romaji + '|'
+        output_str += self.hiragana + '|'
+        output_str += self.katakana + '|'
+        output_str += self.kanji + '|'
+        output_str += str(self.chapter) + '|'
+        output_str += str(self.grammar_types) + '|'
+        output_str += self.note
+        output_str += ')\n'
+        return output_str
 
 # The DatabaseInterface as defined for version 0.1.0 of the program.
 class __DatabaseInterfaceV010:
@@ -248,16 +261,7 @@ class Dictionary:
     def __str__(self):
         output_str = ''
         for word in self.wordlist:
-            output_str += '('
-            output_str += str(word.english) + '|'
-            output_str += word.romaji + '|'
-            output_str += word.hiragana + '|'
-            output_str += word.katakana + '|'
-            output_str += word.kanji + '|'
-            output_str += str(word.chapter) + '|'
-            output_str += str(word.grammar_types) + '|'
-            output_str += word.note
-            output_str += ')\n'
+            output_str += str(word)
         return output_str
 
 

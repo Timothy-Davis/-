@@ -219,6 +219,11 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
                 continue
 
         while type(temp) != list:
+            if type(temp) != list and index == len(romaji):
+                raise ValueError("Invalid romaji to hiragana conversion. Romaji: " + romaji)
+            elif romaji[index] not in temp:
+                raise ValueError("Invalid romaji to hiragana conversion. Romaji: " + romaji)
+
             temp = temp[romaji[index]]
             index += 1
 
@@ -233,8 +238,17 @@ def convert_to_kana(romaji: str, kana: bool = HIRAGANA) -> str:
 
 
 if __name__ == '__main__':
-    romaji = input('Please input some romaji [q to quit]: ').lower()
-    while romaji is not 'q':
-        print(convert_to_kana(romaji))
-        print(convert_to_kana(romaji, kana=KATAKANA))
-        romaji = input('Please input some romaji [q to quit]: ').lower()
+    romaji = ""
+    while True:
+        try:
+            romaji = input('Please input some romaji [q to quit]: ').lower()
+
+            if romaji == 'q':
+                break
+
+            print(convert_to_kana(romaji))
+            print(convert_to_kana(romaji, kana=KATAKANA))
+
+        except ValueError:
+            print(romaji + " is invalid romaji, please try again.")
+
